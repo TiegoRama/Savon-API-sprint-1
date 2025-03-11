@@ -1,0 +1,68 @@
+/* home.component.css */
+:root {
+    --dark-bg: #1a1a1a;
+    --purple-accent: #6a1b9a;
+    --green-accent: #00e676;
+    --text-light: #e0e0e0;
+}
+
+.home-page {
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    padding: 2rem 4rem;
+    min-height: 100vh;
+    border-left: 5px solid var(--purple-accent);
+    box-shadow: 0 0 30px rgba(106, 27, 154, 0.3);
+    
+    h2 {
+        color: var(--green-accent);
+        text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+        border-bottom: 2px solid var(--purple-accent);
+        padding-bottom: 1rem;
+    }
+
+    p {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        line-height: 1.6;
+        border-left: 3px solid var(--green-accent);
+    }
+
+    a {
+        color: var(--purple-accent);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    a:hover {
+        color: var(--green-accent);
+        text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+    }
+
+    .img-styled {
+        width: 300px;
+        border-radius: 15px;
+        border: 2px solid var(--purple-accent);
+        transition: transform 0.3s ease;
+    }
+
+    .img-styled:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px var(--purple-accent);
+    }
+
+    .logo-glow {
+        filter: drop-shadow(0 0 10px var(--green-accent));
+        transition: all 0.3s ease;
+    }
+
+    .neon-glow {
+        background: rgba(106, 27, 154, 0.1);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--purple-accent);
+        box-shadow: 0 0 30px rgba(106, 27, 154, 0.2);
+    }
+}
