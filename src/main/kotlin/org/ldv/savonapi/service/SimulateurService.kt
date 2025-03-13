@@ -3,12 +3,14 @@ package org.ldv.savonapi.service
 import org.ldv.savonapi.dto.LigneIngredientDTO
 import org.ldv.savonapi.dto.RecetteFormDTO
 import org.ldv.savonapi.model.dao.*
+import org.ldv.savonapi.model.entity.Ingredient
 import org.ldv.savonapi.model.entity.LigneIngredient
 import org.ldv.savonapi.model.entity.Recette
 import org.ldv.savonapi.model.entity.Resultat
 import org.ldv.savonapi.model.id.LigneIngredientId
 import org.ldv.savonapi.model.id.ResultatId
 import org.springframework.stereotype.Service
+import java.util.Observable
 
 /**
  * Service pour gérer la simulation et la création de recettes de savon.
@@ -132,6 +134,9 @@ class SimulateurService(
         }
         return recette
     }
+    fun postIngredient(ingredient: Ingredient): Observable<Ingredient> {
+        return this.http.post<Ingredient>(`${this.apiURL}/ingredients`, ingredient);
 
+    }
 
 }

@@ -1,0 +1,27 @@
+meta {
+  name: Ajout d'ingrédient
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://localhost:8080/api-savon/v1/ingredient
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nom": "Huile de lin",
+    "iode": 80,
+    "ins": 110,
+    "sapo": 189,
+    "volMousse": 10,
+    "tenueMousse": 9,
+    "douceur": 9,
+    "durete": 10,
+    "solubilite": 9,
+    "sechage": 10,
+    "estCorpsGras": true
+  }
+}

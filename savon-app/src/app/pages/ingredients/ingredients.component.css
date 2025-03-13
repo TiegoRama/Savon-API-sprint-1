@@ -1,0 +1,70 @@
+/* ingredients.component.css */
+
+.container {
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #6a1b9a; /* Violet foncé */
+    margin-bottom: 1.5rem;
+  }
+  
+  .table {
+    border: 2px solid #000000;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table-dark th {
+    background-color: #6a1b9a !important; /* Violet pour l'en-tête */
+    color: #ffffff;
+    border-color: #000000 !important;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #e8f5e9; /* Vert très clair pour les lignes impaires */
+  }
+  
+  .table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff; /* Blanc pour les lignes paires */
+  }
+  
+  .table-bordered td, 
+  .table-bordered th {
+    border-color: #000000 !important; /* Bordures noires */
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #ce93d8 !important; /* Violet clair au survol */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Style des cellules */
+  td {
+    color: #2e7d32; /* Vert foncé pour le texte */
+    font-weight: 500;
+  }
+  
+  /* Style des alertes */
+  .alert-info {
+    background-color: #f3e5f5; /* Violet très clair */
+    border-color: #6a1b9a;
+    color: #4a148c;
+  }
+  
+  .alert-danger {
+    background-color: #ffebee;
+    border-color: #c62828;
+  }
+  
+  .alert-warning {
+    background-color: #f0f4c3;
+    border-color: #9e9d24;
+  }
+  
+  /* En-têtes de colonnes */
+  th {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
