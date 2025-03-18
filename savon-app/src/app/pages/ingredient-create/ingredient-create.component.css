@@ -1,0 +1,3 @@
+/* ingredient-create.component.css */
+.form-check-label { margin-left: 8px; }
+input[type="number"] { max-width: 200px; }

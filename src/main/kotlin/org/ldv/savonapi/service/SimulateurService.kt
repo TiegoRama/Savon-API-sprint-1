@@ -134,9 +134,6 @@ class SimulateurService(
         }
         return recette
     }
-    fun postIngredient(ingredient: Ingredient): Observable<Ingredient> {
-        return this.http.post<Ingredient>(`${this.apiURL}/ingredients`, ingredient);
 
-    }
 
 }

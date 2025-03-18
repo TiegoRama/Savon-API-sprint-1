@@ -20,5 +20,8 @@ export class IngredientService {
     getAllIngredients(): Observable<Ingredient[]> {
         return this.http.get<Ingredient[]>(`${this.apiUrl}/ingredient`);
   }
+  postIngredient(ingredient: Ingredient): Observable<Ingredient> {
+    return this.http.post<Ingredient>(`${this.apiUrl}/ingredients`, ingredient);
+}
 
 }

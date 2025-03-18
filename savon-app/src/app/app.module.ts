@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -10,6 +10,10 @@ import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.co
 import { HttpClientModule } from '@angular/common/http';
 import { IngredientComponent } from './pages/ingredients/ingredients.component';
 import { RecetteComponent } from './pages/recettes/recettes.component';
+import { IngredientCreateComponent } from './pages/ingredient-create/ingredient-create.component';
+import { IngredientListComponent } from './shared/ingredient-list/ingredient-list.component';
+import { IngredientFormComponent } from './shared/ingredient-form/ingredient-form.component';
+import { IngredientImportExportComponent } from './shared/ingredient-import-export/ingredient-import-export.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +23,18 @@ import { RecetteComponent } from './pages/recettes/recettes.component';
     HomeComponent,
     PrivacyPolicyComponent,
     IngredientComponent,
-    RecetteComponent
+    RecetteComponent,
+    IngredientCreateComponent,
+    HttpClientModule,
+    IngredientListComponent,
+    IngredientFormComponent,
+    IngredientImportExportComponent
     
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [
     provideClientHydration()

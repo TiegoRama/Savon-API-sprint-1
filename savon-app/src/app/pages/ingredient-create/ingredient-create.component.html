@@ -1,0 +1,98 @@
+<form (ngSubmit)="onSubmit()" #ingredientForm="ngForm" class="container mt-4">
+    <!-- Nom -->
+    <div class="mb-3">
+      <label class="form-label">Nom de l'ingrédient</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        name="nom" 
+        [(ngModel)]="ingredient.nom" 
+        required
+        minlength="2"
+        #nomCtrl="ngModel"
+      >
+      <div *ngIf="nomCtrl.invalid && (nomCtrl.touched || nomCtrl.dirty)" class="text-danger">
+        <div *ngIf="nomCtrl.errors?.['required']">Le nom est obligatoire</div>
+        <div *ngIf="nomCtrl.errors?.['minlength']">Minimum 2 caractères</div>
+      </div>
+    </div>
+  
+    <!-- Grille de propriétés -->
+    <div class="row">
+      <!-- Colonne 1 -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Iode</label>
+          <input type="number" class="form-control" name="iode" [(ngModel)]="ingredient.iode" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">INS</label>
+          <input type="number" class="form-control" name="ins" [(ngModel)]="ingredient.ins" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">SAPO</label>
+          <input type="number" class="form-control" name="sapo" [(ngModel)]="ingredient.sapo" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Volume Mousse (%)</label>
+          <input type="number" class="form-control" name="volMousse" [(ngModel)]="ingredient.volMousse" min="0" max="100">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Tenue Mousse</label>
+          <input type="number" class="form-control" name="tenueMousse" [(ngModel)]="ingredient.tenueMousse" min="0">
+        </div>
+      </div>
+  
+      <!-- Colonne 2 -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Douceur</label>
+          <input type="number" class="form-control" name="douceur" [(ngModel)]="ingredient.douceur" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Pouvoir Lavant</label>
+          <input type="number" class="form-control" name="lavant" [(ngModel)]="ingredient.lavant" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Dureté</label>
+          <input type="number" class="form-control" name="durete" [(ngModel)]="ingredient.durete" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Solubilité</label>
+          <input type="number" class="form-control" name="solubilite" [(ngModel)]="ingredient.solubilite" min="0">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Séchage</label>
+          <input type="number" class="form-control" name="sechage" [(ngModel)]="ingredient.sechage" min="0">
+        </div>
+      </div>
+    </div>
+  
+    <!-- Checkbox Corps Gras -->
+    <div class="mb-3 form-check">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        name="estCorpsGras" 
+        [(ngModel)]="ingredient.estCorpsGras"
+      >
+      <label class="form-check-label">Est un corps gras</label>
+    </div>
+  
+    <!-- Bouton de soumission -->
+    <button 
+      type="submit" 
+      class="btn btn-success"
+      [disabled]="!ingredientForm.form.valid"
+    >
+      Créer l'ingrédient
+    </button>
+  </form>
