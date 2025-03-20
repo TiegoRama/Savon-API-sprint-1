@@ -1,0 +1,26 @@
+<div class="container">
+    <h1>Gestion des Ingrédients</h1>
+   
+    <!-- Formulaire d'ajout/modification -->
+    <app-ingredient-form
+    [ingredient]="selectedIngredient"
+    [isEditing]="isEditing"
+    (save)="saveIngredient($event)"
+    (cancelEdit)="resetForm()">
+    </app-ingredient-form>
+   
+    <!-- Liste des ingrédients -->
+    <app-ingredient-list  [ingredients]="ingredients"
+    (edit)="editIngredient($event)"
+    (delete)="deleteIngredient($event)"
+    (deleteAll)="deleteAllIngredients()">
+    </app-ingredient-list>
+   
+    <!-- Import / Export CSV -->
+    <app-ingredient-import-export
+    [ingredients]="ingredients"
+    (import)="importFromCSV($event)"
+    (export)="exportToCSV()"
+    (importComplete)="fetchIngredients()">
+    </app-ingredient-import-export>
+   </div>

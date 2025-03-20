@@ -1,3 +1,53 @@
-/* ingredient-create.component.css */
-.form-check-label { margin-left: 8px; }
-input[type="number"] { max-width: 200px; }
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="checkbox"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #5a32a3;
+  }
+  h2 {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;     /* Centre verticalement */
+    text-align: center;      /* Centre le texte à l'intérieur de l'élément */
+    color: #6f42c1;          /* Couleur violette pour correspondre au thème */
+    font-weight: bold;       /* Texte en gras */
+    margin: 0 auto;          /* Centre le titre horizontalement */
+    padding: 20px 0;         /* Ajoute un peu d'espace autour du titre */
+    width: 100%;             /* Occupe toute la largeur disponible */
+}
+main{
+  background-color: rgb(110, 106, 106);
+}

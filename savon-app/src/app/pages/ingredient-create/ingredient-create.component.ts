@@ -1,56 +1,30 @@
-import { Component } from '@angular/core';
-import { IngredientService } from '../../services/ingredients.service';
+import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../../models/Ingredient';
+import { IngredientService } from '../../services/ingredients.service';
+
 
 @Component({
   selector: 'app-ingredient-create',
   templateUrl: './ingredient-create.component.html',
   styleUrls: ['./ingredient-create.component.css']
 })
-export class IngredientCreateComponent {
-  ingredient: Ingredient = {
-    id: null,
-    nom:'',
-    iode: 0,
-    ins: 0,
-    sapo:0,
-    volMousse:0,
-    tenueMousse:0,
-    douceur:0,
-    lavant:0,
-    durete:0,
-    solubilite:0,
-    sechage:0,
-    estCorpsGras: true,
-    ligneIngredients: []
+export class AjouterIngredientComponent implements OnInit {
+  ingredient: Ingredient = new Ingredient()
 
-  };
+  constructor(private ingredientService: IngredientService) {}
 
-  constructor(private IngredientService: IngredientService) {}
+  ngOnInit(): void {}
 
-  onSubmit() {
-    this.IngredientService.postIngredient(this.ingredient).subscribe({
+  onSubmit(): void {
+    this.ingredientService.addIngredient(this.ingredient).subscribe({
       next: (response) => {
-        console.log('Ingrédient enregistré:', response);
-        // Redirection ou réinitialisation du formulaire
-        this.ingredient = {
-          id: null, 
-          nom:'',
-          iode: 0,
-          ins: 0,
-          sapo:0,
-          volMousse:0,
-          tenueMousse:0,
-          douceur:0,
-          lavant:0,
-          durete:0,
-          solubilite:0,
-          sechage:0,
-          estCorpsGras: true,
-          ligneIngredients: []
-        };
+        console.log('Ingrédient enregistré avec succès:', response);
+        alert('Ingrédient enregistré avec succès !');
       },
-      error: (err) => console.error('Erreur:', err)
+      error: (error) => {
+        console.error('Erreur lors de l\'enregistrement de l\'ingrédient:', error);
+        alert('Erreur lors de l\'enregistrement de l\'ingrédient.');
+      }
     });
   }
 }

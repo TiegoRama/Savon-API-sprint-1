@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Ingredient } from '../../models/Ingredient';
-import { Modal } from 'bootstrap';
+//import { Modal } from 'bootstrap';
+
+
 @Component({
  selector: 'app-ingredient-list',
  templateUrl: './ingredient-list.component.html',
@@ -22,19 +24,19 @@ export class IngredientListComponent {
  // Gestion de la suppression d'un ingrédient avec un modal :
  // ---------------------------------------------------------
  ingredientToDelete: Ingredient | null = null;
- deleteModal!: Modal;
- deleteAllModal!: Modal;
+ //deleteModal!: Modal;
+ //deleteAllModal!: Modal;
  /**
  * Initialise les modales Bootstrap après chargement du composant.
  */
  ngAfterViewInit(): void {
  const modalElement = document.getElementById('deleteModal');
  if (modalElement) {
- this.deleteModal = new Modal(modalElement);
+ //this.deleteModal = new Modal(modalElement);
  }
  const modalElementAll = document.getElementById('deleteAllModal');
  if (modalElementAll) {
- this.deleteAllModal = new Modal(modalElementAll);
+ //this.deleteAllModal = new Modal(modalElementAll);
  }
  }
  /**
@@ -43,7 +45,7 @@ export class IngredientListComponent {
  */
  confirmDelete(ingredient: Ingredient): void {
  this.ingredientToDelete = ingredient;
- this.deleteModal.show();
+ //this.deleteModal.show();
  }
  /**
  * Supprime l’ingrédient après confirmation.
@@ -52,21 +54,21 @@ export class IngredientListComponent {
  if (this.ingredientToDelete) {
  this.delete.emit(this.ingredientToDelete.id!);
  this.ingredientToDelete = null;
- this.deleteModal.hide();
+ //this.deleteModal.hide();
 }
 }
 /**
 * Affiche la modale de confirmation pour supprimer TOUS les ingrédients.
 */
 confirmDeleteAll(): void {
-this.deleteAllModal.show();
+//this.deleteAllModal.show();
 }
 /**
 * Supprime TOUS les ingrédients après confirmation.
 */
 deleteAllConfirmed(): void {
 this.deleteAll.emit();
-this.deleteAllModal.hide();
+//this.deleteAllModal.hide();
 }
 /**
 * Émet un événement pour éditer un ingrédient.

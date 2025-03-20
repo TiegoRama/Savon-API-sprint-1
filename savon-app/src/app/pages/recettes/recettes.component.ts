@@ -1,33 +1,55 @@
-import { Component, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { Recette } from '../../models/Recette';
 import { RecetteService } from '../../services/recette.service';
 
-
 @Component({
-  selector: 'app-recette',
+  selector: 'app-recettes',
   templateUrl: './recettes.component.html',
-  styleUrl: './recettes.component.css'
+  styleUrls: ['./recettes.component.css']
 })
-export class RecetteComponent {
-  recettes: Recette[] = []; // Liste des ingrédients de l’API
-  isLoading: boolean = true; // Flag marquant la récupération des données
-  errorMessage: string = ""; // Eventuel message d'erreur
+export class RecettesComponent implements OnInit {
+  recettes: Recette[] = []; // Liste des recettes
+  isLoading: boolean = true; // Indicateur de chargement
+  errorMessage: string = ""; // Message d'erreur
+
   constructor(private recetteService: RecetteService) {}
+
   ngOnInit(): void {
-    this.fetchIngredients();}
-    fetchIngredients(): void {
-      this.recetteService.getAllRecettes().subscribe({
-      next: (data) => {
-      this.recettes = data;
-      this.isLoading = false;
+    this.fetchRecettes(); // Récupère les recettes au chargement du composant
+  }
+
+  /**
+   * Récupère la liste des recettes depuis l'API
+   */
+  fetchRecettes(): void {
+    this.recetteService.getAllRecettes().subscribe({
+      next: (data:Recette[]) => {
+        this.recettes = data;
+        this.isLoading = false;
       },
-      error: (error) => {
-      this.errorMessage = "Erreur lors du chargement des ingrédients.";
-      console.error("Erreur API:", error);
-      this.isLoading = false;
+      error: (error:Error) => {
+        this.errorMessage = "Erreur lors du chargement des recettes.";
+        console.error("Erreur API:", error);
+        this.isLoading = false;
       }
+    });
+  }
+
+  /**
+   * Supprime une recette
+   * @param id - L'ID de la recette à supprimer
+   */
+  deleteRecette(id: number): void {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette recette ?")) {
+      this.recetteService.deleteRecette(id).subscribe({
+        next: () => {
+          console.log("Recette supprimée avec succès.");
+          this.fetchRecettes(); // Rafraîchit la liste des recettes après suppression
+        },
+        error: (error:Error) => {
+          console.error("Erreur lors de la suppression de la recette:", error);
+        }
       });
-      }
+    }
+  }
 }
