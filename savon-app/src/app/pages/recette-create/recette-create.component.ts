@@ -1,179 +1,158 @@
 import { Component, OnInit } from '@angular/core';
-import { RecetteDTO } from '../../models/RecetteDTO';
-import { LigneIngredient } from '../../models/LigneIngredient';
 import { Ingredient } from '../../models/Ingredient';
 import { IngredientService } from '../../services/ingredients.service';
+import { LigneIngredient } from '../../models/LigneIngredient';
+import { RecetteDTO } from '../../models/RecetteDTO';
 import { RecetteService } from '../../services/recette.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recette-create',
   templateUrl: './recette-create.component.html',
-  styleUrls: ['./recette-create.component.css']
+  styleUrl: './recette-create.component.css'
 })
 export class RecetteCreateComponent implements OnInit {
-  // Attributs du composant
+  availableIngredients: Ingredient[] = []; // à alimenter via service
+  selectedIngredients: LigneIngredient[] = []; // Liste des ingrédients sélectionnés
   recetteDTO: RecetteDTO = new RecetteDTO();
-  ingredientIdSelect: number | null = null;
-  listeIngredients: Ingredient[] = [];
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
   
-  // Pour le modal
-  showModal: boolean = false;
-  selectedIngredientQuantity: number = 0;
-
+  // État du modal
+  showIngredientModal: boolean = false;
+  
   constructor(
     private ingredientService: IngredientService,
     private recetteService: RecetteService,
     private router: Router
   ) {}
 
+  /**
+   * Appel du service de récupération des ingrédients à l'initialisation
+   */
   ngOnInit(): void {
-    this.fetchIngredients();
+    this.loadIngredients();
+    // Initialiser les valeurs par défaut
+    this.recetteDTO.avecSoude = true;
+    this.recetteDTO.concentrationAlcalin = 30;
+    this.recetteDTO.surgraissage = 0;
   }
 
   /**
-   * Charge la liste des ingrédients disponibles depuis l'API
+   * Charge la liste des ingrédients disponibles depuis le service
    */
-  fetchIngredients(): void {
+  loadIngredients(): void {
     this.isLoading = true;
     this.ingredientService.getAllIngredients().subscribe({
-      next: (data) => {
-        this.listeIngredients = data;
+      next: (ingredients) => {
+        this.availableIngredients = ingredients;
         this.isLoading = false;
       },
-      error: (error) => {
-        this.errorMessage = 'Erreur lors du chargement des ingrédients.';
-        console.error('Erreur API:', error);
+      error: (err) => {
+        console.error('Erreur lors du chargement des ingrédients', err);
+        this.errorMessage = 'Erreur lors du chargement des ingrédients';
         this.isLoading = false;
       }
     });
   }
 
   /**
-   * Ouvre le modal pour ajouter un ingrédient
+   * Ouvre le modal de sélection des ingrédients
    */
-  openModal(): void {
-    this.showModal = true;
-    this.ingredientIdSelect = null;
-    this.selectedIngredientQuantity = 0;
+  openIngredientModal(): void {
+    this.showIngredientModal = true;
   }
 
   /**
-   * Ferme le modal
+   * Ferme le modal de sélection des ingrédients
    */
-  closeModal(): void {
-    this.showModal = false;
+  closeIngredientModal(): void {
+    this.showIngredientModal = false;
   }
 
   /**
-   * Ajoute un nouvel ingrédient à la recette
+   * Méthode d'ajout d'un ingrédient à la recette
+   * @param ingredient Ingrédient à ajouter à la recette
    */
-  ajoutLigne(): void {
-    if (!this.ingredientIdSelect) {
-      this.errorMessage = 'Veuillez sélectionner un ingrédient.';
+  ajouterIngredient(ingredient: Ingredient): void {
+    // Empêcher les doublons
+    if (this.selectedIngredients.find(l => l.ingredient?.id === ingredient.id)) {
       return;
     }
-
-    if (this.selectedIngredientQuantity <= 0) {
-      this.errorMessage = 'La quantité doit être supérieure à 0.';
-      return;
-    }
-
-    // Vérifier si l'ingrédient existe déjà dans la recette
-    const existingIndex = this.recetteDTO.ligneIngredients.findIndex(
-      ligne => ligne.ingredient?.id === this.ingredientIdSelect
-    );
-
-    if (existingIndex !== -1) {
-      this.errorMessage = 'Cet ingrédient est déjà dans la recette. Veuillez utiliser un autre ingrédient.';
-      return;
-    }
-
-    // Récupérer l'ingrédient sélectionné
-    const selectedIngredient = this.listeIngredients.find(
-      ing => ing.id === this.ingredientIdSelect
-    );
-
-    if (selectedIngredient) {
-      // Créer une nouvelle ligne d'ingrédient
-      const newLigne = new LigneIngredient();
-      newLigne.ingredient = selectedIngredient;
-      newLigne.quantite = this.selectedIngredientQuantity;
-      
-      // Ajouter la ligne à la recette
-      this.recetteDTO.ligneIngredients.push(newLigne);
-      
-      // Mettre à jour les pourcentages
-      this.majPourcentages();
-      
-      // Réinitialiser les champs et fermer le modal
-      this.ingredientIdSelect = null;
-      this.selectedIngredientQuantity = 0;
-      this.showModal = false;
-      this.errorMessage = '';
-    }
-  }
-
-  /**
-   * Met à jour les pourcentages des ingrédients en fonction des quantités
-   */
-  majPourcentages(): void {
-    // Calculer la quantité totale
-    const quantiteTotal = this.recetteDTO.ligneIngredients.reduce(
-      (sum, ligne) => sum + ligne.quantite, 0
-    );
     
-    // Mettre à jour les pourcentages
-    if (quantiteTotal > 0) {
-      this.recetteDTO.ligneIngredients.forEach(ligne => {
-        ligne.pourcentage = (ligne.quantite / quantiteTotal) * 100;
-      });
-    }
+    const newLigne = new LigneIngredient();
+    newLigne.ingredient = ingredient;
+    newLigne.quantite = 0;
+    newLigne.pourcentage = 0;
+    
+    this.selectedIngredients.push(newLigne);
+    // Ajouter également à recetteDTO.ligneIngredients pour la soumission
+    this.recetteDTO.ligneIngredients = this.selectedIngredients;
   }
-  
+
+  /**
+   * Supprime un ingrédient préalablement choisi pour la recette en cours
+   * @param index Index de l'ingrédient à supprimer
+   */
+  supprimerIngredient(index: number): void {
+    this.selectedIngredients.splice(index, 1);
+    // Mettre à jour le DTO
+    this.recetteDTO.ligneIngredients = this.selectedIngredients;
+  }
+
   /**
    * Met à jour la quantité d'un ingrédient et recalcule les pourcentages
    */
   updateQuantity(index: number, event: any): void {
     const value = parseFloat(event.target.value);
     if (!isNaN(value) && value >= 0) {
-      this.recetteDTO.ligneIngredients[index].quantite = value;
-      this.majPourcentages();
+      this.selectedIngredients[index].quantite = value;
+      // Dans la partie 2, ceci devra appeler la méthode updatePercentages
     }
   }
 
   /**
-   * Supprime une ligne d'ingrédient de la recette
+   * Met à jour les pourcentages en fonction des quantités
+   * (À implémenter dans la partie 2)
    */
-  supprimerLigne(index: number): void {
-    this.recetteDTO.ligneIngredients.splice(index, 1);
-    this.majPourcentages();
+  updatePercentages(): void {
+    // Sera implémenté dans la partie 2
+    const quantiteTotal = this.selectedIngredients.reduce(
+      (sum, ligne) => sum + ligne.quantite, 0
+    );
+    
+    if (quantiteTotal > 0) {
+      this.selectedIngredients.forEach(ligne => {
+        ligne.pourcentage = (ligne.quantite / quantiteTotal) * 100;
+      });
+    }
   }
 
   /**
-   * Soumet la recette à l'API
+   * Envoie la recette à l'API
    */
   submitRecette(): void {
-    // Vérifier si le formulaire est valide
-    if (!this.validateForm()) {
-      return;
+    if (this.validateForm()) {
+      this.isLoading = true;
+      
+      this.recetteService.addRecette(this.recetteDTO).subscribe({
+        next: (response) => {
+          console.log('Recette créée avec succès', response);
+          this.isLoading = false;
+          this.successMessage = 'Recette créée avec succès!';
+          // Redirection vers la liste des recettes après 1.5 secondes
+          setTimeout(() => {
+            this.router.navigate(['/recettes']);
+          }, 1500);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la création de la recette', error);
+          this.errorMessage = 'Erreur lors de la création de la recette';
+          this.isLoading = false;
+        }
+      });
     }
-
-    this.recetteService.addRecette(this.recetteDTO).subscribe({
-      next: (recette) => {
-        this.successMessage = 'Recette créée avec succès!';
-        setTimeout(() => {
-          this.router.navigate(['/recettes']);
-        }, 1500);
-      },
-      error: (error) => {
-        this.errorMessage = 'Erreur lors de la création de la recette: ' + error.message;
-        console.error('Erreur API:', error);
-      }
-    });
   }
 
   /**
@@ -182,29 +161,25 @@ export class RecetteCreateComponent implements OnInit {
   validateForm(): boolean {
     this.errorMessage = '';
     
-    // Vérifier le titre
-    if (!this.recetteDTO.titre.trim()) {
-      this.errorMessage = 'Le titre de la recette est obligatoire.';
+    // Vérifier que les données minimales sont présentes
+    if (!this.recetteDTO.titre) {
+      this.errorMessage = 'Le titre est obligatoire';
       return false;
     }
     
-    // Vérifier les ingrédients
-    if (this.recetteDTO.ligneIngredients.length === 0) {
-      this.errorMessage = 'Veuillez ajouter au moins un ingrédient à la recette.';
+    if (this.selectedIngredients.length === 0) {
+      this.errorMessage = 'Ajoutez au moins un ingrédient';
       return false;
     }
     
-    // Vérifier la concentration d'alcalin
-    if (this.recetteDTO.concentrationAlcalin <= 0 || this.recetteDTO.concentrationAlcalin > 100) {
-      this.errorMessage = 'La concentration d\'alcalin doit être comprise entre 1 et 100%.';
-      return false;
+    // Vérifier que chaque ingrédient a une quantité
+    for (const ligne of this.selectedIngredients) {
+      if (ligne.quantite <= 0) {
+        this.errorMessage = 'Chaque ingrédient doit avoir une quantité';
+        return false;
+      }
     }
     
-    // Vérifier le surgraissage
-    if (this.recetteDTO.surgraissage < 0 || this.recetteDTO.surgraissage > 20) {
-      this.errorMessage = 'Le surgraissage doit être compris entre 0 et 20%.';
-      return false;
-    }
-    
-    return true;}
+    return true;
   }
+}

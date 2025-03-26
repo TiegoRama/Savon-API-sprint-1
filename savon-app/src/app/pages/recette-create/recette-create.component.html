@@ -48,7 +48,7 @@
                   name="surgraissage" 
                   class="form-control" 
                   [(ngModel)]="recetteDTO.surgraissage" 
-                  min="0" 
+                  min="-5" 
                   max="20" 
                   required
                 >
@@ -85,13 +85,13 @@
           <div class="card">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
               <span>Ingrédients de la recette</span>
-              <button type="button" class="btn btn-light btn-sm" (click)="openModal()">+ Ingrédient</button>
+              <button type="button" class="btn btn-light btn-sm" (click)="openIngredientModal()">+ Ingrédient</button>
             </div>
             <div class="card-body">
-              <div *ngIf="recetteDTO.ligneIngredients.length === 0" class="alert alert-warning">
+              <div *ngIf="selectedIngredients.length === 0" class="alert alert-warning">
                 Aucun ingrédient ajouté. Veuillez ajouter au moins un ingrédient.
               </div>
-              <table class="table table-sm table-striped" *ngIf="recetteDTO.ligneIngredients.length > 0">
+              <table class="table table-sm table-striped" *ngIf="selectedIngredients.length > 0">
                 <thead>
                   <tr>
                     <th>Nom Ingrédient</th>
@@ -101,7 +101,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let ligne of recetteDTO.ligneIngredients; let i = index">
+                  <tr *ngFor="let ligne of selectedIngredients; let i = index">
                     <td>{{ ligne.ingredient?.nom }}</td>
                     <td>
                       <input 
@@ -117,9 +117,9 @@
                       <button 
                         type="button" 
                         class="btn btn-danger btn-sm" 
-                        (click)="supprimerLigne(i)"
+                        (click)="supprimerIngredient(i)"
                       >
-                        Supprimer
+                        X
                       </button>
                     </td>
                   </tr>
@@ -135,60 +135,19 @@
         <button 
           type="submit" 
           class="btn btn-primary btn-lg" 
-          [disabled]="isLoading || recetteDTO.ligneIngredients.length === 0"
+          [disabled]="isLoading || selectedIngredients.length === 0"
         >
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           Enregistrer la recette
         </button>
       </div>
     </form>
-  
-    <!-- Modal pour ajouter un ingrédient -->
-    <div class="modal" [class.d-block]="showModal" [class.show]="showModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Choisir l'ingrédient</h5>
-            <button type="button" class="btn-close" (click)="closeModal()" aria-label="Fermer"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="ingredientSelect" class="form-label">Ingrédient :</label>
-              <select 
-                id="ingredientSelect" 
-                class="form-select" 
-                [(ngModel)]="ingredientIdSelect"
-              >
-                <option [ngValue]="null">Sélectionnez un ingrédient</option>
-                <option *ngFor="let ing of listeIngredients" [ngValue]="ing.id">
-                  {{ ing.nom }}
-                </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="quantite" class="form-label">Quantité (g) :</label>
-              <input 
-                type="number" 
-                id="quantite" 
-                class="form-control" 
-                [(ngModel)]="selectedIngredientQuantity" 
-                min="1"
-              >
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeModal()">Fermer</button>
-            <button 
-              type="button" 
-              class="btn btn-primary" 
-              (click)="ajoutLigne()" 
-              [disabled]="!ingredientIdSelect || selectedIngredientQuantity <= 0"
-            >
-              Ajouter
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="modal-backdrop fade show" *ngIf="showModal"></div>
-    </div>
+    
+    <!-- Modal pour la sélection d'ingrédients -->
+    <app-modal-ingredient-picker
+      [ingredients]="availableIngredients"
+      [visible]="showIngredientModal"
+      (close)="closeIngredientModal()"
+      (selectIngredient)="ajouterIngredient($event)">
+    </app-modal-ingredient-picker>
   </div>
