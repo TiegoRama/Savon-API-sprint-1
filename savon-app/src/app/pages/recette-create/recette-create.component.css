@@ -1,0 +1,71 @@
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-header {
+    font-weight: bold;
+  }
+  
+  label {
+    font-weight: 500;
+  }
+  
+  .modal {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .table {
+    margin-bottom: 0;
+  }
+  
+  .form-control.ng-invalid.ng-touched {
+    border-color: #dc3545;
+  }
+  
+  .btn-primary {
+    background-color: #6a1b9a;
+    border-color: #6a1b9a;
+  }
+  
+  .btn-primary:hover, .btn-primary:focus {
+    background-color: #59178a;
+    border-color: #59178a;
+  }
+  
+  .btn-success {
+    background-color: #4caf50;
+    border-color: #4caf50;
+  }
+  
+  .btn-success:hover, .btn-success:focus {
+    background-color: #43a047;
+    border-color: #43a047;
+  }
+  
+  .alert {
+    border-radius: 8px;
+  }
+  
+  /* Style pour les ingrédients dans le tableau */
+  tbody tr {
+    transition: background-color 0.3s;
+  }
+  
+  tbody tr:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Animation pour les messages de succès */
+  .alert-success {
+    animation: fadeIn 0.5s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }

@@ -1,0 +1,194 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Ajout d'une recette de savon</h2>
+  
+    <!-- Messages d'alerte -->
+    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success mb-3">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Formulaire principal -->
+    <form (ngSubmit)="submitRecette()" #recetteForm="ngForm">
+      <div class="row mb-4">
+        <!-- Informations de base de la recette -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              Informations de la recette
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="titre" class="form-label">Titre :</label>
+                <input 
+                  type="text" 
+                  id="titre" 
+                  name="titre" 
+                  class="form-control" 
+                  [(ngModel)]="recetteDTO.titre" 
+                  required
+                >
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description :</label>
+                <textarea 
+                  id="description" 
+                  name="description" 
+                  class="form-control" 
+                  rows="3" 
+                  [(ngModel)]="recetteDTO.description"
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="surgraissage" class="form-label">Surgraissage (%) :</label>
+                <input 
+                  type="number" 
+                  id="surgraissage" 
+                  name="surgraissage" 
+                  class="form-control" 
+                  [(ngModel)]="recetteDTO.surgraissage" 
+                  min="0" 
+                  max="20" 
+                  required
+                >
+              </div>
+              <div class="form-check mb-3">
+                <input 
+                  type="checkbox" 
+                  id="avecSoude" 
+                  name="avecSoude" 
+                  class="form-check-input" 
+                  [(ngModel)]="recetteDTO.avecSoude"
+                >
+                <label for="avecSoude" class="form-check-label">Avec Soude</label>
+              </div>
+              <div class="mb-3">
+                <label for="concentrationAlcalin" class="form-label">Concentration Alcalin (%) :</label>
+                <input 
+                  type="number" 
+                  id="concentrationAlcalin" 
+                  name="concentrationAlcalin" 
+                  class="form-control" 
+                  [(ngModel)]="recetteDTO.concentrationAlcalin" 
+                  min="1" 
+                  max="100" 
+                  required
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Liste des ingrédients -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+              <span>Ingrédients de la recette</span>
+              <button type="button" class="btn btn-light btn-sm" (click)="openModal()">+ Ingrédient</button>
+            </div>
+            <div class="card-body">
+              <div *ngIf="recetteDTO.ligneIngredients.length === 0" class="alert alert-warning">
+                Aucun ingrédient ajouté. Veuillez ajouter au moins un ingrédient.
+              </div>
+              <table class="table table-sm table-striped" *ngIf="recetteDTO.ligneIngredients.length > 0">
+                <thead>
+                  <tr>
+                    <th>Nom Ingrédient</th>
+                    <th>Quantité (g)</th>
+                    <th>Pourcentage</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ligne of recetteDTO.ligneIngredients; let i = index">
+                    <td>{{ ligne.ingredient?.nom }}</td>
+                    <td>
+                      <input 
+                        type="number" 
+                        class="form-control form-control-sm" 
+                        [value]="ligne.quantite" 
+                        (input)="updateQuantity(i, $event)" 
+                        min="0"
+                      >
+                    </td>
+                    <td>{{ ligne.pourcentage | number:'1.2-2' }}%</td>
+                    <td>
+                      <button 
+                        type="button" 
+                        class="btn btn-danger btn-sm" 
+                        (click)="supprimerLigne(i)"
+                      >
+                        Supprimer
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Bouton de soumission -->
+      <div class="d-grid gap-2 col-md-6 mx-auto">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-lg" 
+          [disabled]="isLoading || recetteDTO.ligneIngredients.length === 0"
+        >
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Enregistrer la recette
+        </button>
+      </div>
+    </form>
+  
+    <!-- Modal pour ajouter un ingrédient -->
+    <div class="modal" [class.d-block]="showModal" [class.show]="showModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Choisir l'ingrédient</h5>
+            <button type="button" class="btn-close" (click)="closeModal()" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="ingredientSelect" class="form-label">Ingrédient :</label>
+              <select 
+                id="ingredientSelect" 
+                class="form-select" 
+                [(ngModel)]="ingredientIdSelect"
+              >
+                <option [ngValue]="null">Sélectionnez un ingrédient</option>
+                <option *ngFor="let ing of listeIngredients" [ngValue]="ing.id">
+                  {{ ing.nom }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="quantite" class="form-label">Quantité (g) :</label>
+              <input 
+                type="number" 
+                id="quantite" 
+                class="form-control" 
+                [(ngModel)]="selectedIngredientQuantity" 
+                min="1"
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Fermer</button>
+            <button 
+              type="button" 
+              class="btn btn-primary" 
+              (click)="ajoutLigne()" 
+              [disabled]="!ingredientIdSelect || selectedIngredientQuantity <= 0"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop fade show" *ngIf="showModal"></div>
+    </div>
+  </div>
