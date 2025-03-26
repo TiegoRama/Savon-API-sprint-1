@@ -18,6 +18,7 @@ import { IngredientManagerPageComponent } from './pages/ingredient-management-pa
 import { RadarChartComponent } from './shared/radar-chart/radar-chart.component';
 import { RecetteCreateComponent } from './pages/recette-create/recette-create.component';
 import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker/modal-ingredient-picker.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     provideClientHydration(), 

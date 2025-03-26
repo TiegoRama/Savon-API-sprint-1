@@ -1,5 +1,5 @@
-// modal-ingredient-picker.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ingredient } from '../../models/Ingredient';
 
 @Component({
@@ -10,20 +10,10 @@ import { Ingredient } from '../../models/Ingredient';
 export class ModalIngredientPickerComponent {
   
   @Input()
-  ingredients: Ingredient[] = []; // Liste ingrédients disponibles via le service 
-  
-  @Input()
-  visible: boolean = false;
-  
-  @Output() 
-  close = new EventEmitter<void>();
-  
-  @Output()
-  selectIngredient = new EventEmitter<Ingredient>();
-  
+  ingredients: Ingredient[] = []; // Liste ingrédients disponibles via le service
   selectedIngredient?: Ingredient; // Ingrédient choisi par l'utilisateur
   
-  constructor() {}
+  constructor(public activeModal: NgbActiveModal) {}
   
   // Méthodes du Modal :
   // -------------------
@@ -32,16 +22,14 @@ export class ModalIngredientPickerComponent {
    */
   onAdd(): void {
     if (this.selectedIngredient) {
-      this.selectIngredient.emit(this.selectedIngredient);
-      this.closeModal();
+      this.activeModal.close(this.selectedIngredient);
     }
   }
   
   /**
    * Fermeture du modal 
    */
-  closeModal(): void {
-    this.selectedIngredient = undefined;
-    this.close.emit();
+  onCancel(): void {
+    this.activeModal.dismiss();
   }
 }

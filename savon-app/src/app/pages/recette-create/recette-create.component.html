@@ -1,153 +1,64 @@
-<div class="container mt-4">
-    <h2 class="mb-4">Ajout d'une recette de savon</h2>
-  
-    <!-- Messages d'alerte -->
-    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-      {{ errorMessage }}
-    </div>
-    <div *ngIf="successMessage" class="alert alert-success mb-3">
-      {{ successMessage }}
-    </div>
-  
-    <!-- Formulaire principal -->
-    <form (ngSubmit)="submitRecette()" #recetteForm="ngForm">
-      <div class="row mb-4">
-        <!-- Informations de base de la recette -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header bg-primary text-white">
-              Informations de la recette
-            </div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label for="titre" class="form-label">Titre :</label>
-                <input 
-                  type="text" 
-                  id="titre" 
-                  name="titre" 
-                  class="form-control" 
-                  [(ngModel)]="recetteDTO.titre" 
-                  required
-                >
-              </div>
-              <div class="mb-3">
-                <label for="description" class="form-label">Description :</label>
-                <textarea 
-                  id="description" 
-                  name="description" 
-                  class="form-control" 
-                  rows="3" 
-                  [(ngModel)]="recetteDTO.description"
-                ></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="surgraissage" class="form-label">Surgraissage (%) :</label>
-                <input 
-                  type="number" 
-                  id="surgraissage" 
-                  name="surgraissage" 
-                  class="form-control" 
-                  [(ngModel)]="recetteDTO.surgraissage" 
-                  min="-5" 
-                  max="20" 
-                  required
-                >
-              </div>
-              <div class="form-check mb-3">
-                <input 
-                  type="checkbox" 
-                  id="avecSoude" 
-                  name="avecSoude" 
-                  class="form-check-input" 
-                  [(ngModel)]="recetteDTO.avecSoude"
-                >
-                <label for="avecSoude" class="form-check-label">Avec Soude</label>
-              </div>
-              <div class="mb-3">
-                <label for="concentrationAlcalin" class="form-label">Concentration Alcalin (%) :</label>
-                <input 
-                  type="number" 
-                  id="concentrationAlcalin" 
-                  name="concentrationAlcalin" 
-                  class="form-control" 
-                  [(ngModel)]="recetteDTO.concentrationAlcalin" 
-                  min="1" 
-                  max="100" 
-                  required
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Liste des ingrédients -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-              <span>Ingrédients de la recette</span>
-              <button type="button" class="btn btn-light btn-sm" (click)="openIngredientModal()">+ Ingrédient</button>
-            </div>
-            <div class="card-body">
-              <div *ngIf="selectedIngredients.length === 0" class="alert alert-warning">
-                Aucun ingrédient ajouté. Veuillez ajouter au moins un ingrédient.
-              </div>
-              <table class="table table-sm table-striped" *ngIf="selectedIngredients.length > 0">
-                <thead>
-                  <tr>
-                    <th>Nom Ingrédient</th>
-                    <th>Quantité (g)</th>
-                    <th>Pourcentage</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let ligne of selectedIngredients; let i = index">
-                    <td>{{ ligne.ingredient?.nom }}</td>
-                    <td>
-                      <input 
-                        type="number" 
-                        class="form-control form-control-sm" 
-                        [value]="ligne.quantite" 
-                        (input)="updateQuantity(i, $event)" 
-                        min="0"
-                      >
-                    </td>
-                    <td>{{ ligne.pourcentage | number:'1.2-2' }}%</td>
-                    <td>
-                      <button 
-                        type="button" 
-                        class="btn btn-danger btn-sm" 
-                        (click)="supprimerIngredient(i)"
-                      >
-                        X
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Bouton de soumission -->
-      <div class="d-grid gap-2 col-md-6 mx-auto">
-        <button 
-          type="submit" 
-          class="btn btn-primary btn-lg" 
-          [disabled]="isLoading || selectedIngredients.length === 0"
-        >
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          Enregistrer la recette
-        </button>
-      </div>
-    </form>
+<div class="container">
+    <h2>Calculateur de Recettes</h2>
     
-    <!-- Modal pour la sélection d'ingrédients -->
-    <app-modal-ingredient-picker
-      [ingredients]="availableIngredients"
-      [visible]="showIngredientModal"
-      (close)="closeIngredientModal()"
-      (selectIngredient)="ajouterIngredient($event)">
-    </app-modal-ingredient-picker>
+    <div class="mb-3">
+      <button type="button" class="btn btn-success" (click)="openIngredientModal()">
+        + Ingrédient
+      </button>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom Ingrédient</th>
+            <th>Quantité Gramme</th>
+            <th>Pourcentage</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ligne of selectedIngredients; let i = index">
+            <td>{{ ligne.ingredient?.nom }}</td>
+            <td>
+              <input type="number" class="form-control"
+                    name="quantite{{i}}" [(ngModel)]="ligne.quantite" min="0">
+            </td>
+            <td>
+              <input type="number" class="form-control"
+                    name="pourcentage{{i}}" [(ngModel)]="ligne.pourcentage" min="0" max="100">
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm"
+                      (click)="supprimerIngredient(i)">X</button>
+            </td>
+          </tr>
+          <!-- Message si aucun ingrédient n'est sélectionné -->
+          <tr *ngIf="selectedIngredients.length === 0">
+            <td colspan="4" class="text-center">
+              Aucun ingrédient sélectionné. Utilisez le bouton "+" pour ajouter des ingrédients.
+            </td>
+          </tr>
+        </tbody>
+        <!-- Ajout d'un pied de tableau pour les totaux (à implémenter dans la partie 2) -->
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <th><!-- Total quantité sera calculé dans la partie 2 --></th>
+            <th><!-- Total pourcentage sera calculé dans la partie 2 --></th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    
+    <!-- Boutons de validation et d'annulation -->
+    <div class="mt-3">
+      <button type="button" class="btn btn-primary me-2">
+        Calculer
+      </button>
+      <button type="button" class="btn btn-secondary">
+        Réinitialiser
+      </button>
+    </div>
   </div>
