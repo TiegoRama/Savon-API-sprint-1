@@ -1,45 +1,47 @@
 <div class="container mt-4">
   <h2>Liste des recettes enregistrées</h2>
 
-  <!-- Message de chargement -->
-  <div *ngIf="isLoading" class="alert alert-info">
-    Chargement des recettes...
+  <!-- Messages de chargement, d'erreur, etc. -->
+  
+  <!-- Créez une grille pour les graphiques radar -->
+  <div class="row mt-3">
+    <div *ngFor="let recette of recettes" class="col-6 col-md-4 col-lg-3 mb-3">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header py-2">
+          <h6 class="m-0"><b>{{ recette.titre }}</b></h6>
+        </div>
+        <div class="card-body p-1">
+          <app-radar-chart 
+            [title]="recette.titre"
+            [scores]="getScores(recette)">
+          </app-radar-chart>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Message d'erreur -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Tableau des recettes -->
-  <table class="table table-bordered table-striped mt-3" *ngIf="!isLoading && recettes.length > 0">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Description</th>
-        <th>Surgraissage (%)</th>
-        <th>Apport Eau (g)</th>
-        <th>Agent Alcalin</th>
-        <th>Qté alcalin</th>
-
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let recette of recettes">
-        <td>{{ recette.id }}</td>
-        <td>{{ recette.titre }}</td>
-        <td style="font-size: 0.8em;">{{ recette.description }}</td>
-        <td>{{ recette.surgraissage }}</td>
-        <td>{{ recette.apportEnEau }}</td>
-        <td>{{ recette.avecSoude ? 'Soude' : 'Potasse' }}</td>
-        <td>{{ recette.qteAlcalin }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Message si aucune recette n'est disponible -->
-  <div *ngIf="!isLoading && recettes.length === 0" class="alert alert-warning">
-    Aucune recette enregistrée.
+  
+  <!-- Liste détaillée des recettes (optionnel) -->
+  <div class="row mt-4">
+    <div *ngFor="let recette of recettes" class="col-12 col-md-6 col-lg-4 mb-3">
+      <div class="card shadow">
+        <!-- Contenu détaillé de chaque recette -->
+        <div class="card-header">
+          <div class="card-title ms-2 my-2">
+            <h5><b>{{ recette.titre }}</b></h5>
+          </div>
+        </div>
+        <div class="card-body p-2">
+          <!-- Description et autres détails -->
+          <p><b>Description:</b> {{ recette.description }}</p>
+          <p><b>Surgraissage:</b> {{ recette.surgraissage }}%</p>
+          <!-- Autres détails ici -->
+        </div>
+        <div class="card-footer">
+          <button (click)="deleteRecette(recette.id)" class="btn btn-danger btn-sm">
+            <i class="bi bi-trash-fill me-1"></i>Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

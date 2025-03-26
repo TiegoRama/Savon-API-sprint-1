@@ -60,5 +60,5 @@ export class Recette {
     /**
      * Liste des résultats associés à la recette, représentant les valeurs des différentes caractéristiques (ex: dureté, mousse).
      */
-    listeResultats: Resultat[] = [];
+    resultats : Resultat[] = [];
 }
