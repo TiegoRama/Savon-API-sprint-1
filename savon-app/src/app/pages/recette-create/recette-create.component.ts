@@ -133,6 +133,17 @@ export class RecetteCreateComponent implements OnInit {
       });
     }
   }
+  
+  /**
+   * Met à jour la quantité d'un ingrédient et recalcule les pourcentages
+   */
+  updateQuantity(index: number, event: any): void {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value) && value >= 0) {
+      this.recetteDTO.ligneIngredients[index].quantite = value;
+      this.majPourcentages();
+    }
+  }
 
   /**
    * Supprime une ligne d'ingrédient de la recette
@@ -195,17 +206,5 @@ export class RecetteCreateComponent implements OnInit {
       return false;
     }
     
-    return true;
+    return true;}
   }
-
-  /**
-   * Met à jour la quantité d'un ingrédient et recalcule les pourcentages
-   */
-  updateQuantity(index: number, event: any): void {
-    const value = parseFloat(event.target.value);
-    if (!isNaN(value) && value >= 0) {
-      this.recetteDTO.ligneIngredients[index].quantite = value;
-      this.majPourcentages();
-    }
-  }
-}
