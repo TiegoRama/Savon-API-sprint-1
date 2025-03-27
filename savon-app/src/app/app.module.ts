@@ -16,7 +16,7 @@ import { IngredientFormComponent } from './shared/ingredient-form/ingredient-for
 import { IngredientImportExportComponent } from './shared/ingredient-import-export/ingredient-import-export.component';
 import { IngredientManagerPageComponent } from './pages/ingredient-management-page/ingredient-management-page.component';
 import { RadarChartComponent } from './shared/radar-chart/radar-chart.component';
-import { RecetteCreateComponent } from './pages/recette-create/recette-create.component';
+import { RecettesCreateComponent } from './pages/recette-create/recette-create.component';
 import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker/modal-ingredient-picker.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -36,7 +36,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     IngredientImportExportComponent,
     IngredientManagerPageComponent,
     RadarChartComponent,
-    RecetteCreateComponent,
+    RecettesCreateComponent,
     ModalIngredientPickerComponent
   ],
   imports: [

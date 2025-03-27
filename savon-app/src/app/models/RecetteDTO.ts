@@ -1,5 +1,4 @@
-import { LigneIngredient } from "./LigneIngredient";
-
+import { LigneIngredient} from "./LigneIngredient";
 
 export class RecetteDTO {
     id: number | null = null;
@@ -10,7 +9,4 @@ export class RecetteDTO {
     concentrationAlcalin: number = 0;
     qteAlcalin: number = 0;
     ligneIngredients: LigneIngredient[] = [];
-  
-  
-  }
-  
+}

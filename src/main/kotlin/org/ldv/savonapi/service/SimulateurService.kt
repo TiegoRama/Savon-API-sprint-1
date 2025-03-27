@@ -41,7 +41,7 @@ class SimulateurService(
     fun toRecette(recetteFormDTO: RecetteFormDTO): Recette {
         var recette = Recette(
             recetteFormDTO.id,
-            recetteFormDTO.tite,
+            recetteFormDTO.titre,
             recetteFormDTO.description,
             recetteFormDTO.surgraissage,
             0f,

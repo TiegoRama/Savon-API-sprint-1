@@ -1,71 +1,146 @@
-.card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    margin-bottom: 1.5rem;
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #2d3748;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+h3 {
+  color: #4a5568;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background-color: #6f42c1;
+  color: white;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: #edf2f7;
+}
+
+button {
+  background-color: #6f42c1;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #6f42c1;
+}
+
+button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.add-ingredient {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.add-ingredient select {
+  flex: 1;
+  max-width: 300px;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: #fc8181;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
   }
-  
-  .card-header {
-    font-weight: bold;
-  }
-  
-  label {
-    font-weight: 500;
-  }
-  
-  .modal {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  .modal.show {
+
+  table {
     display: block;
+    overflow-x: auto;
   }
-  
-  .table {
-    margin-bottom: 0;
+
+  th,
+  td {
+    min-width: 120px;
   }
-  
-  .form-control.ng-invalid.ng-touched {
-    border-color: #dc3545;
+
+  h1 {
+    font-size: 1.5rem;
   }
-  
-  .btn-primary {
-    background-color: #6a1b9a;
-    border-color: #6a1b9a;
-  }
-  
-  .btn-primary:hover, .btn-primary:focus {
-    background-color: #59178a;
-    border-color: #59178a;
-  }
-  
-  .btn-success {
-    background-color: #4caf50;
-    border-color: #4caf50;
-  }
-  
-  .btn-success:hover, .btn-success:focus {
-    background-color: #43a047;
-    border-color: #43a047;
-  }
-  
-  .alert {
-    border-radius: 8px;
-  }
-  
-  /* Style pour les ingrédients dans le tableau */
-  tbody tr {
-    transition: background-color 0.3s;
-  }
-  
-  tbody tr:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Animation pour les messages de succès */
-  .alert-success {
-    animation: fadeIn 0.5s;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+}

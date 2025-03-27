@@ -1,64 +1,136 @@
 <div class="container">
-    <h2>Calculateur de Recettes</h2>
-    
-    <div class="mb-3">
-      <button type="button" class="btn btn-success" (click)="openIngredientModal()">
-        + Ingrédient
-      </button>
+  <h1>Créer une nouvelle recette</h1>
+
+  <!-- Formulaire de création de recette -->
+  <form (ngSubmit)="onSubmit()" #recetteForm="ngForm" novalidate>
+    <!-- Titre -->
+    <div class="form-group">
+      <label for="titre">Titre de la recette</label>
+      <input
+        type="text"
+        id="titre"
+        name="titre"
+        [(ngModel)]="recetteDTO.titre"
+        required
+        minlength="3"
+        maxlength="100"
+        #titreInput="ngModel"
+      />
+      <div *ngIf="titreInput.invalid && (titreInput.dirty || titreInput.touched)" class="error-message">
+        <div *ngIf="titreInput.errors?.['required']">Le titre est obligatoire.</div>
+        <div *ngIf="titreInput.errors?.['minlength']">Le titre doit contenir au moins 3 caractères.</div>
+      </div>
     </div>
-    
-    <div class="table-responsive">
-      <table class="table">
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="recetteDTO.description"
+        required
+        minlength="10"
+        maxlength="500"
+        #descriptionInput="ngModel"
+      ></textarea>
+      <div *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched)" class="error-message">
+        <div *ngIf="descriptionInput.errors?.['required']">La description est obligatoire.</div>
+        <div *ngIf="descriptionInput.errors?.['minlength']">La description doit contenir au moins 10 caractères.</div>
+      </div>
+    </div>
+
+    <!-- Quantité Alcalin -->
+    <div class="form-group">
+      <label for="qteAlcalin">Concentration Alcalin (%)</label>
+      <input
+        type="number"
+        id="concentrationAlcalin"
+        name="concentrationAlcalin"
+        [(ngModel)]="recetteDTO.concentrationAlcalin"
+        required
+        min="0"
+        step="0.1"
+      />
+    </div>
+
+    <!-- Surgraissage -->
+    <div class="form-group">
+      <label for="surgraissage">Surgraissage (%)</label>
+      <input
+        type="number"
+        id="surgraissage"
+        name="surgraissage"
+        [(ngModel)]="recetteDTO.surgraissage"
+        required
+        min="0"
+        step="0.1"
+      />
+    </div>
+
+    <!-- Ingrédients -->
+    <div class="form-group">
+      <h3>Ingrédients</h3>
+      <table>
         <thead>
           <tr>
-            <th>Nom Ingrédient</th>
-            <th>Quantité Gramme</th>
-            <th>Pourcentage</th>
-            <th></th>
+            <th>Nom</th>
+            <th>Quantité (g)</th>
+            <th>Pourcentage (%)</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let ligne of selectedIngredients; let i = index">
+          <tr *ngFor="let ligne of recetteDTO.ligneIngredients; let i = index">
             <td>{{ ligne.ingredient?.nom }}</td>
             <td>
-              <input type="number" class="form-control"
-                    name="quantite{{i}}" [(ngModel)]="ligne.quantite" min="0">
+              
+                <input
+                  type="number"
+                  [(ngModel)]="ligne.quantite"
+                  name="quantite_{{ i }}"
+                  required
+                  min="0"
+                  step="0.1" 
+                  (change)="majPourcentages()" 
+                />
+              
             </td>
+            <td>        <input
+              type="number"
+              [ngModel]="ligne.pourcentage"
+              name="pourcentage_{{ i }}"
+              required
+              readonly
+              min="0"
+              step="0.1" 
+              
+            /></td>
             <td>
-              <input type="number" class="form-control"
-                    name="pourcentage{{i}}" [(ngModel)]="ligne.pourcentage" min="0" max="100">
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm"
-                      (click)="supprimerIngredient(i)">X</button>
-            </td>
-          </tr>
-          <!-- Message si aucun ingrédient n'est sélectionné -->
-          <tr *ngIf="selectedIngredients.length === 0">
-            <td colspan="4" class="text-center">
-              Aucun ingrédient sélectionné. Utilisez le bouton "+" pour ajouter des ingrédients.
+              <button type="button" (click)="supprimerLigne(i)">Supprimer</button>
             </td>
           </tr>
         </tbody>
-        <!-- Ajout d'un pied de tableau pour les totaux (à implémenter dans la partie 2) -->
-        <tfoot>
-          <tr>
-            <th>Total</th>
-            <th><!-- Total quantité sera calculé dans la partie 2 --></th>
-            <th><!-- Total pourcentage sera calculé dans la partie 2 --></th>
-            <th></th>
-          </tr>
-        </tfoot>
       </table>
+
+      <!-- Ajouter un ingrédient -->
+      <div class="add-ingredient">
+        <select [(ngModel)]="ingredientIdSelect" name="ingredientSelect" required>
+          <option value="" disabled>Sélectionnez un ingrédient</option>
+          <option *ngFor="let ingredient of listeIngredients" [value]="ingredient.id">
+            {{ ingredient.nom }}
+          </option>
+        </select>
+        <button type="button" (click)="ajoutLigne()" [disabled]="!ingredientIdSelect">Ajouter</button>
+      </div>
     </div>
-    
-    <!-- Boutons de validation et d'annulation -->
-    <div class="mt-3">
-      <button type="button" class="btn btn-primary me-2">
-        Calculer
-      </button>
-      <button type="button" class="btn btn-secondary">
-        Réinitialiser
-      </button>
+
+    <!-- Bouton de soumission -->
+    <div class="form-group">
+      <button type="submit" >Créer la recette</button>
     </div>
-  </div>
+
+    <!-- Messages d'erreur -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </form>
+</div>
